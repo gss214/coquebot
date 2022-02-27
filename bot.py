@@ -1,4 +1,5 @@
 from time import sleep
+from unittest import result
 import tweepy
 import os
 
@@ -8,17 +9,20 @@ access_token = os.environ.get('ACCESS_TOKEN')
 access_token_secret = os.environ.get('ACESS_TOKEN_SECRET')
 bearer_token = os.environ.get('BEARER_TOKEN')
 
-client = tweepy.Client(bearer_token=bearer_token, consumer_key=api_key, consumer_secret=api_secret_key, access_token=access_token, access_token_secret=access_token_secret)
+auth = tweepy.OAuthHandler(api_key, api_secret_key)
+auth.set_access_token(access_token, access_token_secret)
+
+api = tweepy.API(auth)
 
 def fav_retweet_coque():
-    tweets = client.get_users_tweets('1471176402615648256', expansions=['author_id', 'referenced_tweets.id'])
-    for tweet in tweets.data:
-        if not tweet.referenced_tweets or tweet.referenced_tweets[0].data['type'] == 'quoted':
-            try:
-                client.retweet(tweet.id)
+    tweets = api.search_tweets(q='from:@coqueluchismo')
+    for tweet in tweets:
+        try:
+            if not tweet.text.startswith('RT'):
+                api.retweet(tweet.id)
                 print(f'Coque bot retweetou: {tweet.text}')
-            except Exception as e:
-                print(e)
+        except Exception as e:
+            print(e)
 
 while True:
     fav_retweet_coque()
