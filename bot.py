@@ -14,9 +14,9 @@ def fav_retweet_coque():
     tweets = client.get_users_tweets('1471176402615648256', expansions=['author_id', 'referenced_tweets.id'])
     for tweet in tweets.data:
         if not tweet.referenced_tweets or tweet.referenced_tweets[0].data['type'] == 'quoted':
-            print(tweet.text)
             try:
                 client.retweet(tweet.id)
+                print(f'Coque bot retweetou: {tweet.text}')
             except Exception as e:
                 print(e)
 
