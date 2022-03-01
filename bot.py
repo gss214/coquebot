@@ -1,4 +1,3 @@
-import imp
 from time import sleep
 import os
 import tweepy
@@ -9,6 +8,8 @@ class coqueBot():
         self.api_secret_key = str(os.environ.get('API_SECRET_KEY'))
         self.access_token = str(os.environ.get('ACCESS_TOKEN'))
         self.access_token_secret = str(os.environ.get('ACESS_TOKEN_SECRET'))
+        print(self.access_token)
+        print(self.access_token_secret)
         #bearer_token = str(os.environ.get('BEARER_TOKEN'))
 
         auth = tweepy.OAuthHandler(self.api_key, self.api_secret_key)
