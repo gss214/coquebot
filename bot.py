@@ -1,29 +1,42 @@
+import imp
 from time import sleep
+import os
 import tweepy
 
+class coqueBot():
+    def __init__(self) -> None:
+        self.api_key = str(os.environ.get('API_KEY'))
+        self.api_secret_key = str(os.environ.get('API_SECRET_KEY'))
+        self.access_token = str(os.environ.get('ACCESS_TOKEN'))
+        self.access_token_secret = str(os.environ.get('ACESS_TOKEN_SECRET'))
+        #bearer_token = str(os.environ.get('BEARER_TOKEN'))
 
-api_key = '10ZJkrP9fGSO8UC2cNYRII440'
-api_secret_key = 'TDAociKwrPlTd1N5xYIOsjo7OuglikV9V4bc8NeXGtH0lGIINB'
-access_token = '1497819855508189201-Qda53dd4zHQugTt5bgp3kjNIEzI6tS'
-access_token_secret = 'CcsirWJ410MK62a6mUlxofdkXxbOLqz8Nv4FVNoOoy5pg'
-bearer_token = 'AAAAAAAAAAAAAAAAAAAAAGu9ZgEAAAAAXeUkYtbWXSEgaQAZZzQUC6sYw1g%3DSDyRqiB5JBuZGvUR9Opyw1fXWGs7mi5hrXTZkx745IzUfZPCG2'
+        auth = tweepy.OAuthHandler(self.api_key, self.api_secret_key)
+        auth.set_access_token(self.access_token, self.access_token_secret)
 
-auth = tweepy.OAuthHandler(api_key, api_secret_key)
-auth.set_access_token(access_token, access_token_secret)
-
-api = tweepy.API(auth)
-
-def fav_retweet_coque():
-    tweets = api.search_tweets(q='from:@coqueluchismo')
-    for tweet in tweets:
+        self.api = tweepy.API(auth)
+        
         try:
-            if not tweet.text.startswith('RT'):
-                api.retweet(tweet.id)
-                print(f'Coque bot retweetou: {tweet.text}')
-        except Exception as e:
-            pass
+            self.api.verify_credentials()
+            print("Authentication OK")
+            self.run()
+        except:
+            print("Error during authentication")
 
-while True:
-    fav_retweet_coque()
-    sleep(15)
-    
+    def fav_retweet_coque(self):
+        tweets = self.api.search_tweets(q='from:@coqueluchismo')
+        for tweet in tweets:
+            try:
+                if not tweet.text.startswith('RT'):
+                    self.api.retweet(tweet.id)
+                    print(f'Coque bot retweetou: {tweet.text}')
+            except Exception as e:
+                pass
+
+    def run(self):
+        while True:
+            self.fav_retweet_coque()
+            sleep(15)
+            
+if __name__ == '__main__':
+    coquebot = coqueBot()
